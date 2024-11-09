@@ -1,0 +1,19 @@
+{
+  "name": "micro-ROS ESP32S3 camera",
+  "dockerComposeFile": [
+    "../docker/docker-compose.yml"
+  ],
+  "service": "esp32s3_camera",
+  "workspaceFolder": "/code",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros",
+        "ms-python.python",
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools"
+      ]
+    }
+  }
+}
