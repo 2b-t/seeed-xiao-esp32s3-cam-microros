@@ -28,21 +28,27 @@ One can choose in between different transports, in particular UDP over Wifi or E
 
 ## Running
 
-This code can be run by opening the container and then running the following commands:
+This code can be run by opening the container `$ docker compose -f docker-compose.yml up` and then running the following commands:
 
 ```bash
 $ sudo chown -R $(whoami) /code
+$ cd /code
 $ source /opt/esp/idf/export.sh
 $ idf.py set-target esp32s3
-$ idf.py menuconfig # Optional changes
+$ idf.py menuconfig # Change the IP of the Agent as well as the WiFi SSID and WiFi password
 $ idf.py build
 $ sudo chmod o+rw /dev/ttyACM0
 $ idf.py -p /dev/ttyACM0 flash
-$ idf.py -p /dev/ttyACM0 monitor
-# Press Ctrl + ] to exit
+$ idf.py -p /dev/ttyACM0 monitor # Press Ctrl + ] to exit
 ```
 
-With the most recent version of micro-ROS Docker I would run into the error `AttributeError: module 'em' has no attribute 'BUFFERED_OPT'` that is [related to a change in empy](https://stackoverflow.com/questions/77642155/attributeerror-module-object-has-no-attribute-raw-opt/77656642#77656642). Inside the container empy seems to be installed as version 4.2 system-wide as well as inside a virtual environment. I uninstalled both of them as follows and re-installed a compatible version:
+For bridging the information to ROS 2 you will have to launch a `micro_ros_agent`. Simply launch the corresponding container with `$ docker compose -f docker-compose-agent-gui.yml up`. Then you should be able to see the corresponding topics on ROS 2.
+
+
+
+## Troubleshooting
+
+With the most recent version of micro-ROS Docker I would run into the error `AttributeError: module 'em' has no attribute 'BUFFERED_OPT'` when executing `$ idf.py set-target esp32s3`. This is [related to a change in empy](https://stackoverflow.com/questions/77642155/attributeerror-module-object-has-no-attribute-raw-opt/77656642#77656642). Inside the container empy seems to be installed as version 4.2 system-wide as well as inside a virtual environment. I uninstalled both of them as follows and re-installed a compatible version:
 
 ```bash
 $ pip3 uninstall empy
@@ -53,4 +59,6 @@ $ pip3 uninstall empy
 $ pip3 install empy==3.3.4
 ```
 
-After this the compilation just worked fine.
+After cleaning micro-ROS with `$ idf.py clean-microros` the compilation just worked fine.
+
+Another problem that I ran into was that the image publisher was not publishing successfully. In my case this seems to have been the case due to a bad network connection. When creating a local hotspot from my computer everything just worked fine.
