@@ -86,8 +86,7 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
     camera_fb_t* pic = esp_camera_fb_get();
     printf("Picture taken! Its size was: %zu bytes\n", pic->len);
 
-    //if (pic->len <= msg.data.capacity) {
-    if (true) {
+    if (pic->len <= msg.data.capacity) {
       msg.header.frame_id = micro_ros_string_utilities_set(msg.header.frame_id, "camera");
       // See https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h for resolutions
       msg.width = 160;
@@ -127,7 +126,7 @@ void micro_ros_task(void* arg){
   rcl_node_t node;
   RCCHECK(rclc_node_init_default(&node, "esp32_image_publisher", "", &support));
 
-  RCCHECK(rclc_publisher_init_default(&publisher, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, Image), "image_publisher"));
+  RCCHECK(rclc_publisher_init_default(&publisher, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs, msg, Image), "image"));
 
   static micro_ros_utilities_memory_conf_t conf = {};
   conf.max_string_capacity = 50;
