@@ -42,7 +42,15 @@ $ idf.py -p /dev/ttyACM0 monitor
 # Press Ctrl + ] to exit
 ```
 
+With the most recent version of micro-ROS Docker I would run into the error `AttributeError: module 'em' has no attribute 'BUFFERED_OPT'` that is [related to a change in empy](https://stackoverflow.com/questions/77642155/attributeerror-module-object-has-no-attribute-raw-opt/77656642#77656642). Inside the container empy seems to be installed as version 4.2 system-wide as well as inside a virtual environment. I uninstalled both of them as follows and re-installed a compatible version:
 
+```bash
+$ pip3 uninstall empy
+$ pip3 install empy==3.3.4
+$ source /opt/esp/python_env/idf5.0_py3.8_env/bin/activate
+$ sudo chown -R $(whoami) /opt/esp/python_env/idf5.0_py3.8_env
+$ pip3 uninstall empy
+$ pip3 install empy==3.3.4
+```
 
-
-
+After this the compilation just worked fine.
