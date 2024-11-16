@@ -62,3 +62,13 @@ $ pip3 install empy==3.3.4
 After cleaning micro-ROS with `$ idf.py clean-microros` the compilation just worked fine. I have [opened an issue](https://github.com/micro-ROS/micro_ros_espidf_component/issues/268) for this on the official micro-ROS esp-idf component repository. Check there if this problem still exists at the time you are reading this.
 
 Another problem that I ran into was that the image publisher was not publishing successfully. In my case this seems to have been the case due to a bad network connection. When creating a local hotspot from my computer everything just worked fine.
+
+One of my two OV2640 cameras would not support `.pixel_format = PIXFORMAT_JPEG`. In case your camera does you can also record compressed and convert it back to RGB as follows:
+
+```c
+msg.step = msg.width*3; // We now have rgb channels
+msg.encoding = micro_ros_string_utilities_set(msg.encoding, "rgb8"); // The encoding will be rgb8 after conversion
+msg.data.size = msg.height*msg.step;
+fmt2rgb888(pic->buf, pic->len, pic->format, msg.data.data); // Convert jpeg to rgb8
+```
+
