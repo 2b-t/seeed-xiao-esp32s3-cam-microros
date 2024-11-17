@@ -66,9 +66,10 @@ Another problem that I ran into was that the image publisher was not publishing 
 One of my two OV2640 cameras would not support `.pixel_format = PIXFORMAT_JPEG`. In case your camera does you can also record compressed and convert it back to RGB as follows:
 
 ```c
-msg.step = msg.width*3; // We now have rgb channels
+msg.step = msg.width*3; // We now have 3 channels (rgb)
 msg.encoding = micro_ros_string_utilities_set(msg.encoding, "rgb8"); // The encoding will be rgb8 after conversion
 msg.data.size = msg.height*msg.step;
 fmt2rgb888(pic->buf, pic->len, pic->format, msg.data.data); // Convert jpeg to rgb8
 ```
 
+When recording in `.pixel_format = PIXFORMAT_YUV422` the `msg.encoding` has to be set to `"uyvy"`.
