@@ -62,7 +62,7 @@ static const camera_config_t camera_config = {
   .ledc_timer = LEDC_TIMER_0,
   .ledc_channel = LEDC_CHANNEL_0,
 
-  .pixel_format = PIXFORMAT_GRAYSCALE, // YUV422, GRAYSCALE, RGB565 or JPEG (not supported on OV2640)
+  .pixel_format = PIXFORMAT_GRAYSCALE, // YUV422, GRAYSCALE, RGB565 or JPEG (not supported by some OV2640)
   .frame_size = FRAMESIZE_QQVGA, // QQVGA, UXGA
 
   .jpeg_quality = 12, // 0-63, lower number means higher quality
@@ -98,7 +98,7 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
       msg.step = msg.width;
       // See https://github.com/ros2/common_interfaces/blob/rolling/sensor_msgs/include/sensor_msgs/image_encodings.hpp
       msg.encoding = micro_ros_string_utilities_set(msg.encoding, "mono8");
-      msg.data.size = pic->len;
+      msg.data.size = pic->len; // Should be same as msg.height*msg.step
       memcpy(msg.data.data, pic->buf, pic->len);
 
       printf("Publishing image!\n");
