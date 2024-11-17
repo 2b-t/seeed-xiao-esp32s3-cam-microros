@@ -76,6 +76,7 @@ static const camera_config_t camera_config = {
 
 rcl_publisher_t publisher;
 sensor_msgs__msg__Image msg;
+struct timespec ts;
 
 
 void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
@@ -87,6 +88,9 @@ void timer_callback(rcl_timer_t * timer, int64_t last_call_time) {
     printf("Picture taken! Its size was: %zu bytes\n", pic->len);
 
     if (pic->len <= msg.data.capacity) {
+      clock_gettime(CLOCK_REALTIME, &ts);
+      msg.header.stamp.sec = ts.tv_sec;
+      msg.header.stamp.nanosec = ts.tv_nsec;
       msg.header.frame_id = micro_ros_string_utilities_set(msg.header.frame_id, "camera");
       // See https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h for resolutions
       msg.width = 160;
